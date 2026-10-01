@@ -43,6 +43,7 @@
     initThemeToggle();
     initContactForm();
     initBibtexCopy();
+    initTimelineToggle();
   });
 
   /* ================================================================== */
@@ -620,5 +621,42 @@
       tooltip.style.opacity = '0';
       setTimeout(() => tooltip.remove(), 200);
     }, 1500);
+  }
+
+  /* ================================================================== */
+  /*  14. TIMELINE TOGGLE                                                */
+  /* ================================================================== */
+  function initTimelineToggle() {
+    const btn = $('#timeline-toggle-btn');
+    const group = $('#timeline-older-group');
+    if (!btn || !group) return;
+
+    let isOpen = false;
+
+    btn.addEventListener('click', () => {
+      isOpen = !isOpen;
+      
+      if (isOpen) {
+        group.style.display = 'block';
+        btn.querySelector('span').textContent = 'Hide older activities';
+        btn.querySelector('svg').style.transform = 'rotate(180deg)';
+        
+        // Trigger reveal animation for newly shown items
+        const newItems = $$('.timeline-item', group);
+        newItems.forEach((item, idx) => {
+          item.style.transitionDelay = `${idx * 100}ms`;
+          // Small timeout to allow display:block to apply before adding class
+          setTimeout(() => item.classList.add('revealed'), 50);
+        });
+      } else {
+        group.style.display = 'none';
+        btn.querySelector('span').textContent = 'Show older activities';
+        btn.querySelector('svg').style.transform = 'rotate(0)';
+        
+        // Reset reveal state for next time
+        const newItems = $$('.timeline-item', group);
+        newItems.forEach(item => item.classList.remove('revealed'));
+      }
+    });
   }
 })();

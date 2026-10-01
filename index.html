@@ -434,6 +434,7 @@
             </div>
 
             <div class="timeline">
+                <!-- 3 recent events -->
                 <div class="timeline-item reveal" id="timeline-0">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
@@ -458,15 +459,27 @@
                         <p>Presented our work on guessing and verification of column semantics.</p>
                     </div>
                 </div>
-                <!-- Older events (hidden by default) -->
-                <div class="timeline-item reveal" id="timeline-3" style="display: none;">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-date">Mar 2026</span>
-                        <h3 class="timeline-title">📄 Paper "GaV" accepted at ICDE 2026</h3>
-                        <p>Our paper was accepted in the industrial track.</p>
+                
+                <!-- Older events toggle group -->
+                <div id="timeline-older-group" style="display: none;">
+                    <div class="timeline-item" id="timeline-3">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Mar 2026</span>
+                            <h3 class="timeline-title">📄 Paper "GaV" accepted at ICDE 2026</h3>
+                            <p>Our paper was accepted in the industrial track.</p>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="timeline-toggle-wrapper reveal" style="text-align: center; margin-top: 2rem;">
+                <button id="timeline-toggle-btn" class="btn btn-secondary">
+                    <span>Show older activities</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
             </div>
         </div>
     </section>
