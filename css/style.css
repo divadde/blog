@@ -2182,6 +2182,26 @@ a.contact-value:hover {
     background-repeat: no-repeat;
     background-position: right 12px center;
     padding-right: 2.5rem;
+    color: var(--text-heading);
+}
+
+.form-select option {
+    background: var(--bg-card);
+    color: var(--text-heading);
+    padding: 0.5rem;
+}
+
+.form-select option:disabled {
+    color: var(--text-muted);
+}
+
+[data-theme='light'] .form-select option {
+    background: #ffffff;
+    color: #0f0f23;
+}
+
+[data-theme='light'] .form-select option:disabled {
+    color: #8a8a9c;
 }
 
 /* ── Textarea ── */
