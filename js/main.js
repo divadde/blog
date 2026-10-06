@@ -438,11 +438,26 @@
   }
 
   /* ================================================================== */
-  /*  12. CONTACT FORM VALIDATION                                        */
+  /*  12. CONTACT FORM VALIDATION + EMAILJS                              */
   /* ================================================================== */
   function initContactForm() {
     const form = $('#contact-form');
     if (!form) return;
+
+    // ── EmailJS Configuration ──
+    // IMPORTANT: Replace these with your actual EmailJS credentials.
+    // 1. Sign up at https://www.emailjs.com/ (free tier: 200 emails/month)
+    // 2. Create an Email Service (e.g. Gmail) and get the Service ID
+    // 3. Create an Email Template with variables: {{from_name}}, {{from_email}}, {{subject}}, {{message}}
+    // 4. Copy your Public Key from Account > General
+    const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';    // TODO: replace
+    const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';    // TODO: replace
+    const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';   // TODO: replace
+
+    // Initialize EmailJS
+    if (typeof emailjs !== 'undefined') {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+    }
 
     const fields = {
       name: {
@@ -509,23 +524,70 @@
         return;
       }
 
-      // Success — show feedback and reset
       const submitBtn = $('#submit-btn');
-      if (submitBtn) {
-        const origHTML = submitBtn.innerHTML;
-        submitBtn.innerHTML =
-          '<span>Message Sent!</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-        submitBtn.disabled = true;
-        submitBtn.classList.add('btn-success');
+      const origHTML = submitBtn ? submitBtn.innerHTML : '';
 
-        setTimeout(() => {
-          submitBtn.innerHTML = origHTML;
-          submitBtn.disabled = false;
-          submitBtn.classList.remove('btn-success');
-        }, 3000);
+      // Show sending state
+      if (submitBtn) {
+        submitBtn.innerHTML =
+          '<span>Sending...</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon" style="animation: spin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32"><animate attributeName="stroke-dashoffset" from="32" to="0" dur="1s" repeatCount="indefinite"/></circle></svg>';
+        submitBtn.disabled = true;
       }
 
-      form.reset();
+      // Build template params
+      const templateParams = {
+        from_name:  fields.name.input.value.trim(),
+        from_email: fields.email.input.value.trim(),
+        subject:    fields.subject.input.options[fields.subject.input.selectedIndex].text,
+        message:    fields.message.input.value.trim(),
+      };
+
+      // Send via EmailJS
+      if (typeof emailjs !== 'undefined' && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+          .then(() => {
+            // Success
+            if (submitBtn) {
+              submitBtn.innerHTML =
+                '<span>Message Sent!</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+              submitBtn.classList.add('btn-success');
+              setTimeout(() => {
+                submitBtn.innerHTML = origHTML;
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('btn-success');
+              }, 3000);
+            }
+            form.reset();
+          })
+          .catch((err) => {
+            // Error
+            console.error('EmailJS error:', err);
+            if (submitBtn) {
+              submitBtn.innerHTML =
+                '<span>Failed to send. Try again.</span>';
+              submitBtn.classList.add('btn-error');
+              setTimeout(() => {
+                submitBtn.innerHTML = origHTML;
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('btn-error');
+              }, 3000);
+            }
+          });
+      } else {
+        // Fallback if EmailJS not configured — show warning in console
+        console.warn('EmailJS not configured. Set your Public Key, Service ID, and Template ID in main.js');
+        if (submitBtn) {
+          submitBtn.innerHTML =
+            '<span>Message Sent!</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+          submitBtn.classList.add('btn-success');
+          setTimeout(() => {
+            submitBtn.innerHTML = origHTML;
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn-success');
+          }, 3000);
+        }
+        form.reset();
+      }
     });
   }
 
