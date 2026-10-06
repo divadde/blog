@@ -450,9 +450,9 @@
     // 2. Create an Email Service (e.g. Gmail) and get the Service ID
     // 3. Create an Email Template with variables: {{from_name}}, {{from_email}}, {{subject}}, {{message}}
     // 4. Copy your Public Key from Account > General
-    const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';    // TODO: replace
-    const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';    // TODO: replace
-    const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';   // TODO: replace
+    const EMAILJS_PUBLIC_KEY  = 'kh--prE5ddJNglYK5';
+    const EMAILJS_SERVICE_ID  = 'service_bud12ur';
+    const EMAILJS_TEMPLATE_ID = 'template_9xctbke';
 
     // Initialize EmailJS
     if (typeof emailjs !== 'undefined') {
